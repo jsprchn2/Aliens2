@@ -320,7 +320,7 @@ def check_fleet_edges(ai_settings, aliens):
 def create_random_ufo(ai_settings, screen):
     # make random ufo
     ufo = None
-    if random.randrange(0, 100) <= 100:
+    if random.randrange(0, 100) <= 20:
         ufo = Ufo(ai_settings, screen)
     time_stamp = pygame.time.get_ticks()
     return time_stamp, ufo
