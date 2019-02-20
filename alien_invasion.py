@@ -1,59 +1,55 @@
 import pygame
-from pygame.sprite import Group
 
-from settings import Settings
+import game_functions as gf
+
 from game_stats import GameStats
 from scoreboard import Scoreboard
-from button import Button
+from bunker import create_bunker
+from settings import Settings
 from ship import Ship
-from menu import Menu
-import game_functions as gf
 
 
 def run_game():
-    # initialize game, create screen
+    # setup pygame, settings, and display
     pygame.init()
     ai_settings = Settings()
     screen = pygame.display.set_mode(
-        (ai_settings.screen_width, ai_settings.screen_height))
-    pygame.display.set_caption("Alien Invasion")
+        (ai_settings.screen_width, ai_settings.screen_height)
+    )
+    pygame.display.set_caption('Space Invaders')
+    clock = pygame.time.Clock()
 
-    menu = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
-
-    # make play button
-    play_button = Button(ai_settings, screen, "Play")
-    high_score = Button(ai_settings, screen, "High Scores")
-
-    # create an instance to store stats and scoreboard
+    # setup game stats and scoreboard
     stats = GameStats(ai_settings)
     sb = Scoreboard(ai_settings, screen, stats)
-    start = Menu(ai_settings, menu)
-
-    # set background
-    # bg_color = (230, 230, 230)
-
-    # make ship, group to store bullets and a group of aliens
+    # setup ship, bullets, beams, aliens and bunkers
     ship = Ship(ai_settings, screen)
-    bullets = Group()
-    aliens = Group()
+    bullets = pygame.sprite.Group()
+    lasers = pygame.sprite.Group()
+    aliens = pygame.sprite.Group()
+    ufo = pygame.sprite.Group()
 
-    # make alien fleet
     gf.create_fleet(ai_settings, screen, ship, aliens)
+    bunkers = pygame.sprite.Group(create_bunker(ai_settings, screen, 0),
+                                  create_bunker(ai_settings, screen, 1),
+                                  create_bunker(ai_settings, screen, 2),
+                                  create_bunker(ai_settings, screen, 3))
 
-    # start main loop
     while True:
-        gf.check_events(ai_settings, screen, stats, sb, play_button, high_score, ship,
-                        aliens, bullets, start)
-
+        clock.tick(70)  # 70 fps
+        if not stats.game_active:
+            quit_game = not gf.startup_screen(ai_settings, stats, screen)
+            if quit_game:
+                pygame.quit()
+                break
+            gf.start_new_game(ai_settings, screen, stats, sb, ship, aliens, lasers, bullets)
+        gf.check_events(ai_settings, screen, stats, ship, bullets)
         if stats.game_active:
             ship.update()
-            gf.update_bullets(ai_settings, screen, stats, sb, ship, aliens,
-                              bullets)
-            gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens,
-                             bullets)
-
-        gf.update_screen(ai_settings, screen, stats, sb, ship, aliens,
-                         bullets, play_button, high_score, start)
+            gf.update_bullets_lasers(ai_settings, screen, stats, sb, ship, aliens, lasers, bullets, ufo)
+            gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens, lasers, bullets, ufo)
+        gf.update_screen(ai_settings, screen, stats, sb, ship, aliens, lasers, bullets, bunkers, ufo)
+        gf.play_bgm(ai_settings, stats)
 
 
 run_game()

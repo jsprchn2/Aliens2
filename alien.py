@@ -10,7 +10,7 @@ class Alien(Sprite):
         super(Alien, self).__init__()
         self.screen = screen
         self.ai_settings = ai_settings
-        self.type = alientype
+        self.alien_type = alientype
 
         # alien attributes
         self.images = None
@@ -40,7 +40,7 @@ class Alien(Sprite):
         self.dead = False
 
     def init_aliens(self):
-        if self.type == 1:
+        if self.alien_type == 1:
             self.images = [pygame.image.load('images/simple.png'),
                            pygame.image.load('images/simple1.png')]
             self.death_frames = [pygame.image.load('images/deaths/deadsimple.png'),
@@ -48,7 +48,7 @@ class Alien(Sprite):
                                  pygame.image.load('images/deaths/deadsimple2.png'),
                                  pygame.image.load('images/deaths/deadsimple3.png'),
                                  pygame.image.load('images/deaths/deadsimple4.png')]
-        elif self.type == 2:
+        elif self.alien_type == 2:
             self.images = [pygame.image.load('images/rotate.png'),
                            pygame.image.load('images/rotate1.png')]
             self.death_frames = [pygame.image.load('images/deaths/deadrotate.png'),
@@ -90,7 +90,7 @@ class Alien(Sprite):
 
     def update(self):
         # move alien right and left
-        self.x += (self.ai_settings.alien_speed_factor *
+        self.x += (self.ai_settings.alien_spd_factor *
                    self.ai_settings.fleet_direction)
         self.rect.x = self.x
         time = pygame.time.get_ticks()

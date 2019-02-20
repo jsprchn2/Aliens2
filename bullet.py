@@ -19,12 +19,12 @@ class Bullet(Sprite):
         self.y = float(self.rect.y - yoffset)
 
         self.color = ai_settings.bullet_color
-        self.speed_factor = ai_settings.bullet_speed_factor
+        self.spd_factor = ai_settings.bullet_spd_factor
 
     def update(self):
         # move bullet up screen
         # update decimal position
-        self.y -= self.speed_factor
+        self.y -= self.spd_factor
         # update the rect position
         self.rect.y = self.y
 

@@ -51,9 +51,9 @@ class Ship(Sprite):
         # update ship position
         if not self.dead:
             if self.moving_right and self.rect.right < self.screen_rect.right:
-                self.center += self.ai_settings.ship_speed_factor
+                self.center += self.ai_settings.ship_spd_factor
             if self.moving_left and self.rect.left > 0:
-                self.center -= self.ai_settings.ship_speed_factor
+                self.center -= self.ai_settings.ship_spd_factor
 
         # update rect object from self.center
             self.rect.centerx = self.center
@@ -69,11 +69,12 @@ class Ship(Sprite):
                     self.image = self.ship_img
 
     def fire_laser(self):
-        if not self.fire:
+        self.channel.play(self.ship_laser)
+        """if not self.fire:
             self.image = self.laser_frames[self.laser_index]
             self.channel.play(self.ship_laser)
         else:
-            self.image = self.ship_img
+            self.image = self.ship_img"""
 
     def death(self):
         self.dead = True
