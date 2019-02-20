@@ -13,7 +13,12 @@ class Ufo(pygame.sprite.Sprite):
         self.possible_scores = ai_settings.UFO_pts
         self.score = None
 
-        self.image = pygame.image.load('images/face.png')
+        self.image = [pygame.image.load('images/face.png'),
+                      pygame.image.load('images/face1.png'),
+                      pygame.image.load('images/face2.png'),
+                      pygame.image.load('images/face3.png')]
+        self.image_index = 0
+        self.image = self.image[self.image_index]
         self.rect = self.image.get_rect()
         self.score_image = None
         self.font = SysFont(None, 32, bold=True)
@@ -67,6 +72,10 @@ class Ufo(pygame.sprite.Sprite):
 
     def update(self):
         if not self.dead:
+            # if abs(self.last_frame - time) > 1000:
+                # self.last_frame = time
+                # self.image_index = (self.image_index + 1) % len(self.images)
+                # self.image = self.images[self.image_index]
             self.rect.x += self.speed
             if self.speed > 0 and self.rect.left > self.ai_settings.screen_width:
                 self.kill()
